@@ -8,6 +8,10 @@
     "jest": true,
     "node": true
   },
+  "globals": {
+    "$Shape": true,
+    "$Enum": true
+  },
   "parser": "babel-eslint",
   "rules": {
     "array-bracket-spacing": [2, "never"],

@@ -1,12 +1,13 @@
 express-boilerplate
 ===================
 
-A modern Express boilerplate for building RESTful APIs.
+A modern Express boilerplate for building GraphQL APIs.
 
 - Babel (transpiles to Node 4)
 - ES2016, async/await, etc.
 - Flow
 - ESLint
+- GraphQL
 - Mongoose
 - Jest
 

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "description": "A modern Express boilerplate for building RESTful APIs.",
+  "description": "A modern Express boilerplate for building GraphQL APIs.",
   "scripts": {
     "start": "babel-watch --watch src src/index.js",
     "debug": "DB=mongodb://localhost:27017/expressboilerplate babel-watch --watch src src/index.js --inspect",
@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.22.0",
-    "body-parser": "^1.16.0",
     "cors": "^2.8.1",
     "dotenv": "^4.0.0",
     "express": "^4.14.0",
