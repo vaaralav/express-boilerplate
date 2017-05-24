@@ -1,8 +1,9 @@
 // @flow
 
-import request from 'supertest'
 import mongoose from 'mongoose'
+import {graphql} from 'graphql'
 
+import schema from '$app/schema'
 import createTestServer from '../createTestServer'
 
 describe('post', () => {
@@ -18,62 +19,56 @@ describe('post', () => {
   })
 
   it('should create post', async () => {
-    const post = {
-      title: 'Hello World',
-      body: 'Welcome to my blog.',
-    }
+    const mutation = `
+      mutation {
+        createPost(post: {
+          title: "Hello World",
+          body: "Welcome to my blog.",
+        }) {
+          _id,
+          title,
+          body,
+        }
+      }
+    `
 
-    const response = await request(server)
-      .post('/posts')
-      .set('Authorization', 'Bearer foobarbaz')
-      .send(post)
+    const result: {data: any} = await graphql(schema, mutation)
 
-    expect(response.status).toEqual(201)
-  })
-
-  it('should throw 400 when submitting empty post', async () => {
-    const post = {}
-    const response = await request(server)
-      .post('/posts')
-      .set('Authorization', 'Bearer foobarbaz')
-      .send(post)
-
-    expect(response.status).toEqual(400)
-  })
-
-  it('should throw 401 when submitting unauthorized post', async () => {
-    const post = {
-      title: 'Hello World',
-      body: 'Welcome to my blog.',
-    }
-
-    const response = await request(server)
-      .post('/posts')
-      .send(post)
-
-    expect(response.status).toEqual(401)
+    expect(result.data.createPost._id).toBeDefined()
+    expect(result.data.createPost.title).toBe('Hello World')
+    expect(result.data.createPost.body).toBe('Welcome to my blog.')
   })
 
   it('should fetch post', async () => {
-    const post = {
-      title: 'Hello World',
-      body: 'Welcome to my blog.',
-    }
+    const mutation = `
+      mutation {
+        createPost(post: {
+          title: "Hello World",
+          body: "Welcome to my blog.",
+        }) {
+          _id,
+          title,
+          body,
+        }
+      }
+    `
 
-    const createResponse = await request(server)
-      .post('/posts')
-      .set('Authorization', 'Bearer foobarbaz')
-      .send(post)
+    const mutationResult: {data: any} = await graphql(schema, mutation)
 
-    const getResponse = await request(server).get(`/posts/${createResponse.body._id}`)
+    const query = `
+      query {
+        post(id: "${mutationResult.data.createPost._id}") {
+          _id,
+          title,
+          body,
+        }
+      }
+    `
 
-    expect(getResponse.status).toEqual(200)
-    expect(getResponse.body.title).toEqual('Hello World')
-  })
+    const queryResult: {data: any} = await graphql(schema, query)
 
-  it('should throw 404 when fetching nonexistent post', async () => {
-    const response = await request(server).get('/posts/foobar')
-
-    expect(response.status).toEqual(404)
+    expect(queryResult.data.post._id).toBe(mutationResult.data.createPost._id)
+    expect(queryResult.data.post.title).toBe('Hello World')
+    expect(queryResult.data.post.body).toBe('Welcome to my blog.')
   })
 })
