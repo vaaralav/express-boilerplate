@@ -1,6 +1,9 @@
 // @flow
 
+import graphqlHTTP from 'express-graphql'
+
 import routes from '$src/routes'
+import RootSchema from '$db/graphql/schemas/RootSchema'
 
 import type {$Application} from 'express'
 import type {Route, Endpoint} from './types'
@@ -19,4 +22,9 @@ export default (app: $Application) => {
     // $FlowIgnore
     app[method].apply(app, params)
   })
+
+  app.use('/graphql', graphqlHTTP({
+    schema: RootSchema,
+    graphiql: true,
+  }))
 }

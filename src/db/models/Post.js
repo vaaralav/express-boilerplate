@@ -1,6 +1,6 @@
 // @flow
 
-import mongoose from 'mongoose'
+import mongoose, {Schema} from 'mongoose'
 
 import type {DbModel} from '$app/types'
 
@@ -9,7 +9,7 @@ export type DbPost = DbModel & {
   body: string,
 }
 
-const PostSchema = mongoose.Schema({
+const PostSchema = new Schema({
   title: {
     type: String,
     required: true,
